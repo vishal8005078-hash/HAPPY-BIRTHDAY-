@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100vh;font-family:'Nunito',sans-serif;background:#fff0f6;overflow-x:hidden;}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;width:100%;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;position:relative;overflow:hidden;}
+.page.active{display:flex;}
+
+/* ── ANIMATED GRADIENT BG ── */
+#page1{background:linear-gradient(135deg,#ffe4f0,#ffd6ea,#ffe9f3,#ffc8e0);background-size:400% 400%;animation:gradShift 8s ease infinite;}
+#page2{background:linear-gradient(135deg,#ffedf5,#ffe0ee,#ffd6e8,#ffcfe5);background-size:400% 400%;animation:gradShift 10s ease infinite reverse;}
+#page3{background:linear-gradient(135deg,#fff0f6,#ffe4f0,#ffd0e8,#ffbfdd);background-size:400% 400%;animation:gradShift 7s ease infinite;}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ── FLOATING PARTICLES BG ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;animation:floatUp linear infinite;opacity:0;}
+@keyframes floatUp{
+  0%{transform:translateY(105vh) rotate(0deg) scale(0.5);opacity:0;}
+  10%{opacity:0.7;}
+  80%{opacity:0.5;}
+  100%{transform:translateY(-10vh) rotate(720deg) scale(1.2);opacity:0;}
+}
+
+/* ── CARD ── */
+.card{
+  background:rgba(255,255,255,0.72);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-radius:2.4rem;
+  border:1.5px solid rgba(247,190,215,0.6);
+  padding:2.4rem 2rem 2rem;
+  max-width:400px;width:100%;
+  text-align:center;
+  position:relative;z-index:10;
+  box-shadow:0 8px 50px rgba(220,80,130,0.13), inset 0 1px 0 rgba(255,255,255,0.8);
+  animation:cardIn .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(0.92);}to{opacity:1;transform:none;}}
+
+/* ── CARD DECO CIRCLES ── */
+.card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(247,131,172,0.25),transparent 70%);pointer-events:none;}
+.card::after{content:'';position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(245,157,199,0.2),transparent 70%);pointer-events:none;}
+
+/* ── CAT SCENE ── */
+.cat-scene{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.6rem;width:160px;height:160px;}
+.cat-svg{width:120px;height:120px;position:relative;z-index:2;}
+.cat-svg.bounce{animation:catBounce 2s ease-in-out infinite;}
+@keyframes catBounce{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-16px) rotate(2deg);}}
+
+/* orbit hearts */
+.orbit{position:absolute;width:140px;height:140px;animation:spinOrbit 5s linear infinite;top:10px;left:10px;}
+.orbit-dot{position:absolute;font-size:1rem;}
+@keyframes spinOrbit{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* glow ring */
+.glow-ring{position:absolute;width:130px;height:130px;border-radius:50%;border:2px dashed rgba(247,131,172,0.4);animation:ringPulse 2.5s ease-in-out infinite;top:15px;left:15px;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:0.5;}50%{transform:scale(1.08);opacity:1;}}
+
+/* sparkles */
+.spark{position:absolute;font-size:0.9rem;animation:sparkle 1.5s ease-in-out infinite;}
+.spark:nth-child(1){top:0;left:20px;animation-delay:0s;}
+.spark:nth-child(2){top:5px;right:15px;animation-delay:.4s;}
+.spark:nth-child(3){bottom:10px;left:5px;animation-delay:.8s;}
+.spark:nth-child(4){bottom:5px;right:20px;animation-delay:1.2s;}
+@keyframes sparkle{0%,100%{opacity:1;transform:scale(1) rotate(0deg);}50%{opacity:0.2;transform:scale(0.5) rotate(180deg);}}
+
+/* ── TYPOGRAPHY ── */
+h1.title{font-family:'Pacifico',cursive;color:#c9386b;font-size:2rem;margin-bottom:0.5rem;line-height:1.25;text-shadow:0 2px 12px rgba(201,56,107,0.15);}
+p.sub{color:#b85575;font-size:0.97rem;line-height:1.65;margin-bottom:1.2rem;}
+p.poem{
+  color:#9a3f5e;font-size:0.88rem;font-style:italic;line-height:1.8;
+  margin-bottom:1.5rem;padding:1rem 1.1rem;
+  background:linear-gradient(135deg,rgba(255,220,235,0.5),rgba(255,200,220,0.3));
+  border-radius:1.4rem;border-left:3px solid #f783ac;
+  position:relative;
+}
+p.poem::before{content:'"';position:absolute;top:2px;left:10px;font-size:2.5rem;color:rgba(247,131,172,0.3);font-family:Georgia,serif;line-height:1;}
+
+/* ── BUTTON ── */
+.btn{
+  display:inline-block;
+  background:linear-gradient(135deg,#f9a8c9,#e75480,#d63068);
+  color:#fff;border:none;border-radius:50px;
+  padding:0.9rem 2.4rem;font-size:1rem;
+  font-family:'Nunito',sans-serif;font-weight:800;
+  cursor:pointer;letter-spacing:0.3px;
+  box-shadow:0 4px 20px rgba(215,48,104,0.4),0 1px 0 rgba(255,255,255,0.3) inset;
+  transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 8px 28px rgba(215,48,104,0.5);}
+.btn:active{transform:scale(0.96);}
+.btn.pulse{animation:btnPulse 2s ease-in-out infinite;}
+@keyframes btnPulse{
+  0%,100%{box-shadow:0 4px 20px rgba(215,48,104,0.4);}
+  50%{box-shadow:0 4px 36px rgba(215,48,104,0.7),0 0 0 8px rgba(215,48,104,0.1);}
+}
+/* shimmer */
+.btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 2.5s ease infinite;}
+@keyframes shimmer{0%{left:-100%;}60%,100%{left:150%;}}
+
+/* ── HEARTS ROW ── */
+.hearts-row{font-size:1.3rem;letter-spacing:5px;margin-bottom:0.8rem;animation:heartBeat 1.5s ease-in-out infinite;}
+@keyframes heartBeat{0%,100%{transform:scale(1);}14%{transform:scale(1.15);}28%{transform:scale(1);}42%{transform:scale(1.1);}70%{transform:scale(1);}}
+
+/* ── CONFETTI ── */
+.confetti-piece{position:fixed;top:-20px;z-index:99;pointer-events:none;animation:confettiFall linear forwards;}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1;}
+  100%{transform:translateY(110vh) rotate(900deg) scale(0.5);opacity:0;}
+}
+
+/* ── RIBBON DECORATIONS ── */
+.ribbon-top{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:1.5rem;animation:ribbonWave 2s ease-in-out infinite;}
+@keyframes ribbonWave{0%,100%{transform:translateX(-50%) rotate(-8deg);}50%{transform:translateX(-50%) rotate(8deg);}}
+
+/* ── TAG (friend badge) ── */
+.friend-badge{
+  display:inline-block;background:linear-gradient(135deg,#ffe0ef,#ffc8e0);
+  color:#c9386b;font-size:0.75rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  padding:0.3rem 1rem;border-radius:50px;border:1px solid rgba(247,131,172,0.5);
+  margin-bottom:0.8rem;
+}
+
+/* ── FINAL STARS BURST ── */
+.star-burst{position:fixed;pointer-events:none;z-index:98;font-size:1.4rem;animation:starBurst ease-out forwards;}
+@keyframes starBurst{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.3);}
+}
+
+/* ── MOBILE ── */
+@media(max-width:400px){
+  h1.title{font-size:1.65rem;}
+  .card{padding:1.8rem 1.2rem 1.5rem;}
+  .cat-svg{width:100px;height:100px;}
+  .cat-scene{width:140px;height:140px;}
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<!-- ══════════════ PAGE 1 ══════════════ -->
+<div class="page active" id="page1">
+  <div class="card">
+    <span class="ribbon-top">🎀</span>
+    <div class="friend-badge">🌸 A little surprise for you 🌸</div>
+
+    <div class="cat-scene">
+      <div class="glow-ring"></div>
+      <div class="orbit">
+        <span class="orbit-dot" style="top:0;left:60px">💖</span>
+        <span class="orbit-dot" style="top:60px;left:120px">🌸</span>
+        <span class="orbit-dot" style="top:120px;left:60px">💕</span>
+        <span class="orbit-dot" style="top:60px;left:0">✨</span>
+      </div>
+      <svg class="cat-svg bounce" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#ffeef5"/>
+          </radialGradient>
+        </defs>
+        <!-- ears -->
+        <polygon points="18,42 6,10 38,30" fill="url(#g1)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="24,40 14,18 36,30" fill="#ffd6e8"/>
+        <polygon points="102,42 114,10 82,30" fill="url(#g1)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="96,40 106,18 84,30" fill="#ffd6e8"/>
+        <!-- head -->
+        <ellipse cx="60" cy="58" rx="38" ry="35" fill="url(#g1)" stroke="#f9c0d4" stroke-width="2"/>
+        <!-- cheek blush -->
+        <ellipse cx="36" cy="68" rx="10" ry="6" fill="#ffb3cc" opacity=".4"/>
+        <ellipse cx="84" cy="68" rx="10" ry="6" fill="#ffb3cc" opacity=".4"/>
+        <!-- eyes: shiny round -->
+        <ellipse cx="46" cy="52" rx="8" ry="9" fill="#2a1a2a"/>
+        <ellipse cx="74" cy="52" rx="8" ry="9" fill="#2a1a2a"/>
+        <circle cx="50" cy="48" r="3" fill="#fff"/>
+        <circle cx="78" cy="48" r="3" fill="#fff"/>
+        <circle cx="44" cy="55" r="1.5" fill="#fff" opacity=".6"/>
+        <circle cx="72" cy="55" r="1.5" fill="#fff" opacity=".6"/>
+        <!-- nose -->
+        <ellipse cx="60" cy="66" rx="4.5" ry="3" fill="#f083a0"/>
+        <!-- mouth -->
+        <path d="M54 70 Q60 76 66 70" stroke="#f083a0" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- whiskers -->
+        <line x1="16" y1="63" x2="50" y2="65" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="16" y1="69" x2="50" y2="67" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="65" x2="104" y2="63" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="67" x2="104" y2="69" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- bow -->
+        <polygon points="46,84 58,91 46,98" fill="#f783ac"/>
+        <polygon points="74,84 62,91 74,98" fill="#f783ac"/>
+        <circle cx="60" cy="91" r="5" fill="#e75480"/>
+        <!-- body -->
+        <ellipse cx="60" cy="110" rx="24" ry="12" fill="url(#g1)" stroke="#f9c0d4" stroke-width="1.5"/>
+        <!-- tail -->
+        <path d="M84 112 Q114 96 106 76 Q102 66 92 72" stroke="#f9c0d4" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="91" cy="70" rx="8" ry="7" fill="#ffd6e8" stroke="#f9c0d4" stroke-width="1.5"/>
+      </svg>
+      <span class="spark">✨</span>
+      <span class="spark">💫</span>
+      <span class="spark">🌟</span>
+      <span class="spark">⭐</span>
+    </div>
+
+    <h1 class="title">Psst… hey you 🎀</h1>
+    <p class="sub">Someone special made something special — just for you.<br>Are you ready to find out? 🐾</p>
+    <button class="btn pulse" onclick="goTo(2)">🌸 Tap for a Surprise 🌸</button>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 2 ══════════════ -->
+<div class="page" id="page2">
+  <div class="card">
+    <span class="ribbon-top">💕</span>
+    <div class="friend-badge">🎀 Getting warmer… 🎀</div>
+
+    <div class="cat-scene">
+      <div class="glow-ring"></div>
+      <div class="orbit" style="animation-direction:reverse;animation-duration:4s">
+        <span class="orbit-dot" style="top:0;left:60px">🌷</span>
+        <span class="orbit-dot" style="top:60px;left:120px">💗</span>
+        <span class="orbit-dot" style="top:120px;left:60px">🌸</span>
+        <span class="orbit-dot" style="top:60px;left:0">🎊</span>
+      </div>
+      <svg class="cat-svg bounce" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g2" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#ffeef5"/>
+          </radialGradient>
+        </defs>
+        <polygon points="18,42 6,10 38,30" fill="url(#g2)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="24,40 14,18 36,30" fill="#ffd6e8"/>
+        <polygon points="102,42 114,10 82,30" fill="url(#g2)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="96,40 106,18 84,30" fill="#ffd6e8"/>
+        <ellipse cx="60" cy="58" rx="38" ry="35" fill="url(#g2)" stroke="#f9c0d4" stroke-width="2"/>
+        <ellipse cx="36" cy="68" rx="10" ry="6" fill="#ffb3cc" opacity=".5"/>
+        <ellipse cx="84" cy="68" rx="10" ry="6" fill="#ffb3cc" opacity=".5"/>
+        <!-- winking -->
+        <path d="M38 53 Q46 46 54 53" stroke="#2a1a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="74" cy="52" rx="8" ry="9" fill="#2a1a2a"/>
+        <circle cx="78" cy="48" r="3" fill="#fff"/>
+        <circle cx="72" cy="55" r="1.5" fill="#fff" opacity=".6"/>
+        <ellipse cx="60" cy="66" rx="4.5" ry="3" fill="#f083a0"/>
+        <path d="M54 70 Q60 76 66 70" stroke="#f083a0" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- heart on forehead -->
+        <path d="M53 24 C53 19 60 15 60 22 C60 15 67 19 67 24 C67 30 60 35 60 35 C60 35 53 30 53 24Z" fill="#f783ac"/>
+        <line x1="16" y1="63" x2="50" y2="65" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="16" y1="69" x2="50" y2="67" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="65" x2="104" y2="63" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="67" x2="104" y2="69" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <polygon points="46,84 58,91 46,98" fill="#f783ac"/>
+        <polygon points="74,84 62,91 74,98" fill="#f783ac"/>
+        <circle cx="60" cy="91" r="5" fill="#e75480"/>
+        <ellipse cx="60" cy="110" rx="24" ry="12" fill="url(#g2)" stroke="#f9c0d4" stroke-width="1.5"/>
+        <path d="M84 112 Q114 96 106 76 Q102 66 92 72" stroke="#f9c0d4" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="91" cy="70" rx="8" ry="7" fill="#ffd6e8" stroke="#f9c0d4" stroke-width="1.5"/>
+      </svg>
+      <span class="spark">💖</span>
+      <span class="spark">🌷</span>
+      <span class="spark">🌸</span>
+      <span class="spark">💕</span>
+    </div>
+
+    <h1 class="title">Oh hello, <span id="nameDisplay">Angela</span> ✨</h1>
+    <p class="sub">You've made so many days brighter just by being in them.<br>Keep going, one more tap 🐱💕</p>
+    <p class="poem">
+      Like morning light through frosted glass,<br>
+      you find the gold in ordinary days —<br>
+      the kind of heart that time can't pass,<br>
+      a friendship built a thousand ways. 🌷
+    </p>
+    <button class="btn" onclick="goTo(3)">💫 One more… just one more 💫</button>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 3 ══════════════ -->
+<div class="page" id="page3">
+  <div class="card">
+    <span class="ribbon-top" style="font-size:1.8rem">🎉</span>
+
+    <div class="hearts-row">💖 💕 💖 💕 💖</div>
+
+    <div class="cat-scene" style="width:170px;height:170px;">
+      <div class="glow-ring" style="width:155px;height:155px;top:8px;left:8px;border-color:rgba(247,131,172,0.6)"></div>
+      <div class="orbit" style="animation-duration:3.5s;width:160px;height:160px;top:5px;left:5px">
+        <span class="orbit-dot" style="top:0;left:75px;font-size:1.2rem">🎂</span>
+        <span class="orbit-dot" style="top:75px;left:148px;font-size:1rem">🎉</span>
+        <span class="orbit-dot" style="top:148px;left:75px;font-size:1.1rem">🌟</span>
+        <span class="orbit-dot" style="top:75px;left:0;font-size:1rem">🎊</span>
+      </div>
+      <svg class="cat-svg bounce" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:130px;height:130px">
+        <defs>
+          <radialGradient id="g3" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#ffeef5"/>
+          </radialGradient>
+        </defs>
+        <!-- party hat -->
+        <polygon points="60,0 36,40 84,40" fill="#f783ac" stroke="#e75480" stroke-width="1.5"/>
+        <polygon points="48,28 60,0 72,28" fill="#ffb3cc" opacity=".5"/>
+        <line x1="56" y1="4" x2="70" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <circle cx="60" cy="0" r="4" fill="#fff"/>
+        <!-- pompom streamers -->
+        <path d="M60 0 Q52 -4 48 4" stroke="#ffd6e8" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="48" cy="4" r="2.5" fill="#e75480"/>
+        <path d="M60 0 Q68 -4 72 4" stroke="#ffd6e8" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="72" cy="4" r="2.5" fill="#c9386b"/>
+
+        <polygon points="18,44 6,12 38,32" fill="url(#g3)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="24,42 14,20 36,32" fill="#ffd6e8"/>
+        <polygon points="102,44 114,12 82,32" fill="url(#g3)" stroke="#f9c0d4" stroke-width="2"/>
+        <polygon points="96,42 106,20 84,32" fill="#ffd6e8"/>
+        <ellipse cx="60" cy="60" rx="38" ry="35" fill="url(#g3)" stroke="#f9c0d4" stroke-width="2"/>
+        <ellipse cx="36" cy="70" rx="11" ry="7" fill="#ffb3cc" opacity=".5"/>
+        <ellipse cx="84" cy="70" rx="11" ry="7" fill="#ffb3cc" opacity=".5"/>
+        <!-- happy arched eyes -->
+        <path d="M38 54 Q46 46 54 54" stroke="#2a1a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M66 54 Q74 46 82 54" stroke="#2a1a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="60" cy="68" rx="4.5" ry="3" fill="#f083a0"/>
+        <path d="M50 73 Q60 82 70 73" stroke="#f083a0" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <line x1="16" y1="65" x2="50" y2="67" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="16" y1="71" x2="50" y2="69" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="67" x2="104" y2="65" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="70" y1="69" x2="104" y2="71" stroke="#e8afc8" stroke-width="1.2" stroke-linecap="round"/>
+        <polygon points="46,86 58,93 46,100" fill="#f783ac"/>
+        <polygon points="74,86 62,93 74,100" fill="#f783ac"/>
+        <circle cx="60" cy="93" r="5" fill="#e75480"/>
+        <ellipse cx="60" cy="113" rx="24" ry="11" fill="url(#g3)" stroke="#f9c0d4" stroke-width="1.5"/>
+        <path d="M84 114 Q114 98 106 78 Q102 68 92 74" stroke="#f9c0d4" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="91" cy="72" rx="8" ry="7" fill="#ffd6e8" stroke="#f9c0d4" stroke-width="1.5"/>
+      </svg>
+      <span class="spark" style="top:-5px;left:10px">🎊</span>
+      <span class="spark" style="top:-5px;right:10px;animation-delay:.5s">🎉</span>
+      <span class="spark" style="bottom:5px;left:0;animation-delay:1s">✨</span>
+      <span class="spark" style="bottom:0;right:5px;animation-delay:1.5s">💫</span>
+    </div>
+
+    <h1 class="title">Happy Birthday<br><span id="nameDisplay2">Angela</span>!! 🎂</h1>
+
+    <p class="sub">
+      You deserve every good thing the world has saved up — all the joy, all the magic, all the warmth. Today is yours, completely. 🌟
+    </p>
+
+    <p class="poem">
+      You carry sunshine in your laugh,<br>
+      and kindness in your quiet ways —<br>
+      in every ordinary half<br>
+      you somehow set the whole world ablaze.<br><br>
+      Here's to you on this beautiful day,<br>
+      may every wish find its way home —<br>
+      for someone as wonderful as you, I pray,<br>
+      may you never, ever feel alone. 🌸
+    </p>
+
+    <div style="font-size:2rem;margin-bottom:1rem;animation:heartBeat 1.2s ease-in-out infinite">💖</div>
+    <p style="color:#c9386b;font-weight:800;font-size:1rem;margin-bottom:1.5rem;letter-spacing:0.3px">
+      Wishing you the most magical birthday 🐾✨
+    </p>
+
+    <button class="btn" onclick="replay()">🔄 Replay the magic 🎀</button>
+  </div>
+</div>
+
+<script>
+// ── CHANGE NAME HERE ──
+const HER_NAME = "Angela";
+
+document.querySelectorAll('#nameDisplay, #nameDisplay2').forEach(el => el.textContent = HER_NAME);
+
+// ── FLOATING PARTICLES ──
+const pContainer = document.getElementById('particles');
+const emojis = ['💕','💖','🌸','🌷','✨','🎀','🩷','💗','🫧','⭐','🌟','💫'];
+for(let i=0;i<30;i++){
+  const s = document.createElement('span');
+  s.className = 'particle';
+  s.textContent = emojis[i % emojis.length];
+  s.style.left = Math.random()*100 + 'vw';
+  s.style.fontSize = (0.7 + Math.random()*1.1) + 'rem';
+  const dur = 10 + Math.random()*14;
+  s.style.animationDuration = dur + 's';
+  s.style.animationDelay = -(Math.random()*dur) + 's';
+  pContainer.appendChild(s);
+}
+
+function goTo(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page'+n);
+  pg.classList.add('active');
+  if(n===3){ launchConfetti(); launchStarBurst(); }
+  window.scrollTo(0,0);
+}
+function replay(){ goTo(1); }
+
+function launchConfetti(){
+  const pieces=['💖','🌸','🎀','✨','🎊','💕','🩷','🌷','🎉','⭐','💗','🫧'];
+  for(let i=0;i<40;i++){
+    setTimeout(()=>{
+      const el = document.createElement('span');
+      el.className = 'confetti-piece';
+      el.textContent = pieces[Math.floor(Math.random()*pieces.length)];
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.fontSize = (0.9 + Math.random()*1.1) + 'rem';
+      const dur = 3 + Math.random()*3;
+      el.style.animationDuration = dur + 's';
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), dur*1000+300);
+    }, i*80);
+  }
+}
+
+function launchStarBurst(){
+  const cx = window.innerWidth/2, cy = window.innerHeight/3;
+  const pieces=['✨','💫','🌟','⭐','💖','🎊'];
+  for(let i=0;i<16;i++){
+    const el = document.createElement('span');
+    el.className = 'star-burst';
+    el.textContent = pieces[i%pieces.length];
+    el.style.left = cx + 'px';
+    el.style.top  = cy + 'px';
+    const angle = (i/16)*360;
+    const dist  = 80 + Math.random()*120;
+    el.style.setProperty('--tx', Math.cos(angle*Math.PI/180)*dist + 'px');
+    el.style.setProperty('--ty', Math.sin(angle*Math.PI/180)*dist + 'px');
+    el.style.animationDuration = (0.8 + Math.random()*0.6) + 's';
+    el.style.animationDelay = (Math.random()*0.3) + 's';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1600);
+  }
+}
+</script>
+</body>
+</html>
